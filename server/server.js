@@ -6,6 +6,7 @@ import { clerkMiddleware } from '@clerk/express'
 import clerkWebhooks from "./controllers/ClerkWebhooks.js"
 import userRouter from "./routes/userRoute.js"
 import connectCloudinary from "./config/clodinary.js"
+import addressRouter from "./routes/addressRoute.js"
 
 
 await connectDB()  // Establish connection to the database
@@ -24,6 +25,7 @@ app.use("/api/clerk", clerkWebhooks)
 //define api routes
 app.use('/api/user',userRouter) // routes for user functionality
 app.use('/api/products',userRouter) // routes for handling products 
+app.use('/api/products',addressRouter) // routes for handling addresses 
 
 // Route Endpoint to check API Status
 app.get('/', (req,res) => {

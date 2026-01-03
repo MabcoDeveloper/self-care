@@ -13,6 +13,6 @@ const addressSchema = mongoose.Schema({
     phone: {type: String, required:true},
 }, {timeStamps: true})
 
-const address = mongoose.model("Address", addressSchema)
+const Address = mongoose.model("Address", addressSchema)
 
 export default Address 
