@@ -5,9 +5,11 @@ import connectDB from "./config/mongodb.js"
 import { clerkMiddleware } from '@clerk/express'
 import clerkWebhooks from "./controllers/ClerkWebhooks.js"
 import userRouter from "./routes/userRoute.js"
+import connectCloudinary from "./config/clodinary.js"
 
 
 await connectDB()  // Establish connection to the database
+await connectCloudinary // setup cloudinary for image storage
 
 const app = express() //initialze express application
 app.use(cors()) // Enable Cross-origin Resource sharing
@@ -21,6 +23,7 @@ app.use("/api/clerk", clerkWebhooks)
 
 //define api routes
 app.use('/api/user',userRouter) // routes for user functionality
+app.use('/api/products',userRouter) // routes for handling products 
 
 // Route Endpoint to check API Status
 app.get('/', (req,res) => {
