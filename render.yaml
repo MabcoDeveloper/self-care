@@ -22,8 +22,9 @@ services:
     root: server
     # ensure server dependencies are installed in the server folder
     buildCommand: npm --prefix server install
-    # run server start from the server folder
-    startCommand: npm --prefix server run server
+    # ensure server dependencies are installed at runtime before starting
+    # this forces an install so express and other deps exist when Node starts
+    startCommand: npm --prefix server install --no-audit --no-fund && npm --prefix server run server
     envVars:
       - key: NODE_ENV
         value: production
