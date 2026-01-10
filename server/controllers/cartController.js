@@ -1,5 +1,6 @@
 import { isObjectIdOrHexString } from "mongoose";
 import User from "../models/User.js";
+import Product from "../models/Products.js";
 
 // adding to cart [POST '/add']
 export const addToCart = async (req, res) => {
@@ -25,6 +26,34 @@ export const addToCart = async (req, res) => {
   } catch (error) {
     console.log(error.message);
     res.json({ success: false, message: error.message });
+  }
+};
+
+// add to cart by product id [POST '/add-by-id']
+export const addToCartById = async (req, res) => {
+  try {
+    const { productId, size: requestedSize, quantity = 1 } = req.body;
+    const { userId } = req.auth();
+
+    if (!productId) return res.json({ success: false, message: "productId is required" });
+
+    // fetch product to determine default size if not provided
+    const product = await Product.findById(productId);
+    if (!product) return res.json({ success: false, message: "Product not found" });
+
+    const size = requestedSize || (Array.isArray(product.size) && product.size.length > 0 ? product.size[0] : "default");
+
+    const userData = await User.findById(userId);
+    const cartData = (userData && userData.cartData) || {};
+
+    cartData[productId] = cartData[productId] || {};
+    cartData[productId][size] = (cartData[productId][size] || 0) + Number(quantity);
+
+    await User.findByIdAndUpdate(userId, { cartData });
+    return res.json({ success: true, message: "Added to cart" });
+  } catch (error) {
+    console.log(error.message);
+    return res.json({ success: false, message: error.message });
   }
 };
 

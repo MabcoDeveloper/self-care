@@ -15,10 +15,10 @@ const Contact = () => {
         <p className="text-sm text-gray-600 pb-10 text-center max-w-md">
           We’d love to hear from you. Send us a message or reach out manually at{" "}
           <a
-            href="mailto:hello@vogues.com"
+            href="mailto:hello@Selfcare.com"
             className="font-semibold text-secondary hover:underline transition-colors"
           >
-            hello@vogues.com
+            hello@Selfcare.com
           </a>
         </p>
 
