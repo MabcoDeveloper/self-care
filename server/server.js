@@ -1,112 +1,72 @@
-const express = require("express");
-const cors = require("cors");
-require("dotenv").config();
-const connectDB = require("./config/mongodb.js");
-// Ensure all models are registered with mongoose
-require("./models/index.js");
-const { clerkMiddleware } = require("@clerk/express");
-const clerkWebhooks = require("./controllers/ClerkWebhooks.js");
-const userRouter = require("./routes/userRoute.js");
-const connectCloudinary = require("./config/clodinary.js");
-const addressRouter = require("./routes/addressRoute.js");
-const cartRouter = require("./routes/cartRoute.js");
-const productRouter = require("./routes/productRoute.js");
-const orderRouter = require("./routes/orderRoute.js");
-const { stripeWebhooks } = require("./controllers/stripeWebhook.js");
+import express from "express";
+import cors from "cors";
+import "dotenv/config";
 
-// Use async wrapper since top-level await isn't available in CommonJS
-async function startServer() {
-  try {
-    await connectDB(); // Establish connection to the database
-    await connectCloudinary(); // setup cloudinary for image storage
-    
-    const app = express(); //initialize express application
-    
-    // Enable Cross-origin Resource sharing and allow credentials (cookies)
-    app.use(
-      cors({
-        origin: process.env.CLIENT_URL || "http://localhost:5173",
-        credentials: true,
-      })
-    );
+import connectDB from "./config/mongodb.js";
+import connectCloudinary from "./config/clodinary.js";
 
-    // api to listen stripe webhooks
-    app.post(
-      "/api/stripe",
-      express.raw({ type: "application/json" }),
-      stripeWebhooks
-    );
+// Ensure all models are registered
+import "./models/index.js";
 
-    //Middleware Setup
-    app.use(express.json()); // enables JSON request body parsing
-    
-    // Log incoming cookies and auth-related headers for debugging Clerk auth issues
-    app.use((req, res, next) => {
-      console.log('Incoming request:', req.method, req.path, { 
-        cookie: req.headers.cookie, 
-        authorization: req.headers.authorization 
-      });
-      next();
-    });
+import { clerkMiddleware } from "@clerk/express";
+import clerkWebhooks from "./controllers/ClerkWebhooks.js";
+import { stripeWebhooks } from "./controllers/stripeWebhook.js";
 
-    app.use(clerkMiddleware());
+import userRouter from "./routes/userRoute.js";
+import addressRouter from "./routes/addressRoute.js";
+import cartRouter from "./routes/cartRoute.js";
+import productRouter from "./routes/productRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
-    // Log whether Clerk secret is present (don't print the value)
-    console.log('CLERK_SECRET_KEY present:', !!process.env.CLERK_SECRET_KEY);
+/* -------------------- INIT -------------------- */
 
-    // Dev-only debug route to inspect Clerk auth results (remove in production)
-    app.get('/api/debug/auth', (req, res) => {
-      try {
-        const auth = typeof req.auth === 'function' ? req.auth() : null;
-        return res.json({ 
-          success: true, 
-          auth, 
-          user: req.user || null 
-        });
-      } catch (e) {
-        return res.json({ 
-          success: false, 
-          message: e.message 
-        });
-      }
-    });
+const app = express();
 
-    //API to listen clerk webhooks
-    app.use("/api/clerk", clerkWebhooks);
+/* -------------------- DATABASE -------------------- */
+await connectDB();
+await connectCloudinary();
 
-    //define api routes
-    app.use("/api/user", userRouter); // routes for user functionality
-    app.use("/api/products", productRouter); // routes for handling products
-    app.use("/api/addresses", addressRouter); // routes for handling addresses
-    app.use("/api/cart", cartRouter); // routes for handling cart
-    app.use("/api/orders", orderRouter); // routes for handling order
+/* -------------------- CORS -------------------- */
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL, // REQUIRED for Render
+    credentials: true,
+  })
+);
 
-    // Health check for Render (ADD THIS)
-    app.get("/health", (req, res) => {
-      res.json({ 
-        status: "OK", 
-        timestamp: new Date(),
-        service: "self-care-server",
-        env: process.env.NODE_ENV
-      });
-    });
+/* -------------------- STRIPE WEBHOOK -------------------- */
+/**
+ * Stripe REQUIRES raw body.
+ * This MUST be before express.json()
+ */
+app.post(
+  "/api/stripe",
+  express.raw({ type: "application/json" }),
+  stripeWebhooks
+);
 
-    // Route Endpoint to check API Status
-    app.get("/", (req, res) => {
-      res.send("API Successfully connected");
-    });
+/* -------------------- JSON PARSER -------------------- */
+app.use(express.json());
 
-    const port = process.env.PORT || 3000; //Define server port
+/* -------------------- CLERK -------------------- */
+app.use(clerkMiddleware());
 
-    // Start the server
-    app.listen(port, () =>
-      console.log(`Server is running at http://localhost:${port}`)
-    );
-    
-  } catch (error) {
-    console.error("Failed to start server:", error);
-    process.exit(1);
-  }
-}
+/* -------------------- ROUTES -------------------- */
+app.use("/api/clerk", clerkWebhooks);
+app.use("/api/user", userRouter);
+app.use("/api/products", productRouter);
+app.use("/api/addresses", addressRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/orders", orderRouter);
 
-startServer();
+/* -------------------- HEALTH CHECK -------------------- */
+app.get("/", (req, res) => {
+  res.status(200).send("API is running");
+});
+
+/* -------------------- START SERVER -------------------- */
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
+});

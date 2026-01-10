@@ -1,36 +1,32 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "description": "",
+  "type": "module",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "server": "nodemon server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",  
   "dependencies": {
-    "@clerk/clerk-sdk-node": "^4.13.23",
-    "@clerk/express": "^1.7.61",
-    "axios": "^1.13.2",
-    "cloudinary": "^2.8.0",
-    "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.3", 
     "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "mongoose": "^8.0.0",
+    "stripe": "^20.1.0",
+    "@clerk/express": "^1.7.61",
+    "@clerk/clerk-sdk-node": "^4.13.23",
+    "cloudinary": "^2.8.0",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^8.0.0",  
     "multer": "^2.0.2",
     "nodemailer": "^7.0.12",
-    "stripe": "^20.1.0",
-    "svix": "^1.84.1"
+    "svix": "^1.84.1",
+    "axios": "^1.13.2",
+    "cookie-parser": "^1.4.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.11"
   },
   "engines": {
-    "node": "18.0.0"  
+    "node": "18.17.0"
   }
 }
