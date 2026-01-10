@@ -2,7 +2,7 @@ node_modules/
 
 # Local environment files (keep secrets out of git)
 .env
-.env.*
+
 
 # Build outputs
 /dist/
