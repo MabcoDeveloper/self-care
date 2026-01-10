@@ -1,9 +1,9 @@
 import React from "react";
 import Hero from "../components/Hero";
-import Features from "../context/Features";
 import NewArrivals from "../components/NewArrivals";
 import PopilarProducts from "../components/PopilarProducts";
 import Testimonial from "../components/Testimonial";
+import Features from "../components/Features";
 const Home = () => {
   return (
     <>

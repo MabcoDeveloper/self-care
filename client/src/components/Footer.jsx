@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -56,44 +57,44 @@ const Footer = () => {
             <p className="bold-18 text-tertiary mb-3">COMPANY</p>
             <ul className="flex flex-col gap-2 regular-14">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/about"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   About Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/careers"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Careers
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/press"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Press
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/blog"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/partners"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Partners
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -103,44 +104,44 @@ const Footer = () => {
             <p className="bold-18 text-tertiary mb-3">SUPPORT</p>
             <ul className="flex flex-col gap-2 regular-14">
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/help"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Help Center
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/safety"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Safety Information
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/cancellations"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Cancellation Options
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/contact"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  to="/accessibility"
                   className="text-secondary hover:text-secondary/80 transition-colors"
                 >
                   Accessibility
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -196,28 +197,28 @@ const Footer = () => {
           </p>
           <ul className="flex items-center gap-4">
             <li>
-              <a
-                href="#"
+              <Link
+                to="/privacy"
                 className="text-secondary hover:opacity-80 transition-colors"
               >
                 Privacy
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="/terms"
                 className="text-secondary hover:opacity-80 transition-colors"
               >
                 Terms
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#"
+              <Link
+                to="/sitemap"
                 className="text-secondary hover:opacity-80 transition-colors"
               >
                 Sitemap
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

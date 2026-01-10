@@ -65,14 +65,16 @@ const Cart = () =>
                     {cartInfo.map( ( item, i ) =>
                     {
                         // Find the product using the ID key
-                        const product = products.find( ( product ) => product._id === item._id ) 
-                        // Get quantity 
-                        const quantity = cartItems[item._id][item.size]
+                        const product = products.find( ( product ) => product._id === item._id ) || DummyProducts.find(p=>p._id===item._id)
+                        // Guard if product or cart entry missing
+                        const cartEntry = cartItems[item._id] || {}
+                        const quantity = cartEntry[item.size] || 0
+                        if (!product || quantity <= 0) return null
                         return (
                         <div key={i} className='grid grid-cols-[6fr_2fr_1fr] items-center bg-white p-2'>
                             <div className='flex items-center md:gap-6 gap-3 '>
-                                <div className='product-image flex bg-primary rounded-xl'>
-                                    <img src={product.image[ 0 ]} alt="" width={120} />
+                                    <div className='product-image flex bg-primary rounded-xl'>
+                                    <img src={(product.image && product.image[0]) || ''} alt="" width={120} />
                                 </div>
                             <div>
                                 <h5 className='sm:block hidden h5 line-clamp-1'>{product.title}</h5>
@@ -90,7 +92,7 @@ const Cart = () =>
                             </div>
                             </div>
                             <div className='price text-center bold-16'>
-                                {currency}{product.price[item.size] * quantity}.00 
+                                {currency}{((product.price && product.price[item.size]) || 0) * quantity}.00 
                             </div>
                             <button onClick={() => updateQuantity( item._id, item.size, 0 )}                className='cart-remove cursor-pointer ml-5'>
                                 <svg class="red-trash-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
