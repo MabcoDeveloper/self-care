@@ -1,0 +1,38 @@
+# Render.com declarative spec for deploying client (static) and server (web)
+# Replace <REPO_URL> with your Git repo URL (or remove the key if you will connect via the UI)
+# Update branch, root, buildCommand, publishPath and env vars as needed for your project.
+
+services:
+  - type: static_site
+    name: self-care-client
+    repo: <REPO_URL>
+    branch: main
+    root: client
+    buildCommand: npm install && npm run build
+    publishPath: client/dist
+    env:
+      - key: NODE_ENV
+        value: production
+    autoDeploy: true
+
+  - type: web
+    name: self-care-server
+    repo: <REPO_URL>
+    branch: main
+    root: server
+    buildCommand: npm install
+    startCommand: npm run server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add the following secrets in the Render dashboard or replace with real values:
+      # - key: MONGO_URI
+      #   value: <MONGO_CONNECTION_STRING>
+      # - key: CLERK_SECRET_KEY
+      #   value: <CLERK_SECRET_KEY>
+      # - key: SMTP_USER
+      #   value: <SMTP_USER>
+      # - key: SMTP_PASS
+      #   value: <SMTP_PASS>
+    plan: free
+    autoDeploy: true
