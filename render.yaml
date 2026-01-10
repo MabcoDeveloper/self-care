@@ -1,41 +1,28 @@
-# Render.com declarative spec for deploying client (static) and server (web)
-# Replace <REPO_URL> with your Git repo URL (or remove the key if you will connect via the UI)
-# Update branch, root, buildCommand, publishPath and env vars as needed for your project.
-
+# render.yaml
 services:
-  - type: static_site
-    name: self-care-client
-    repo: <REPO_URL>
-    branch: main
-    root: client
-    buildCommand: npm install && npm run build
-    publishPath: client/dist
-    env:
-      - key: NODE_ENV
-        value: production
-    autoDeploy: true
-
   - type: web
-    name: self-care-server
-    repo: <REPO_URL>
-    branch: main
-    root: server
-    # ensure server dependencies are installed in the server folder
-    buildCommand: npm --prefix server install
-    # ensure server dependencies are installed at runtime before starting
-    # this forces an install so express and other deps exist when Node starts
-    startCommand: npm --prefix server install --no-audit --no-fund && npm --prefix server run server
+    name: vogues-backend
+    env: node
+    buildCommand: cd server && npm install
+    startCommand: cd server && node server.js
     envVars:
       - key: NODE_ENV
         value: production
-      # Add the following secrets in the Render dashboard or replace with real values:
-      # - key: MONGO_URI
-      #   value: <MONGO_CONNECTION_STRING>
-      # - key: CLERK_SECRET_KEY
-      #   value: <CLERK_SECRET_KEY>
-      # - key: SMTP_USER
-      #   value: <SMTP_USER>
-      # - key: SMTP_PASS
-      #   value: <SMTP_PASS>
-    plan: free
+      - key: MONGODB_URI
+        sync: false  # Will set manually in Render dashboard
+    healthCheckPath: /health
+    autoDeploy: true
+
+  - type: web
+    name: vogues-frontend
+    env: static
+    buildCommand: cd client && npm install && npm run build
+    staticPublishPath: client/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://vogues-backend.onrender.com
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
     autoDeploy: true
