@@ -1,7 +1,3 @@
-# Render.com declarative spec for deploying client (static) and server (web)
-# Replace <REPO_URL> with your Git repo URL (or remove the key if you will connect via the UI)
-# Update branch, root, buildCommand, publishPath and env vars as needed for your project.
-
 services:
   - type: static_site
     name: self-care-client
@@ -9,33 +5,31 @@ services:
     branch: main
     root: client
     buildCommand: npm install && npm run build
-    publishPath: client/dist
+    publishPath: dist  # Changed from client/dist
     env:
       - key: NODE_ENV
         value: production
+      - key: VITE_API_URL
+        value: https://self-care-server.onrender.com
     autoDeploy: true
 
   - type: web
     name: self-care-server
     repo: <REPO_URL>
     branch: main
-    root: server
-    # ensure server dependencies are installed in the server folder
-    buildCommand: npm --prefix server install
-    # ensure server dependencies are installed at runtime before starting
-    # this forces an install so express and other deps exist when Node starts
-    startCommand: npm --prefix server install --no-audit --no-fund && npm --prefix server run server
+    root: server  # This means Render will cd into server directory
+    buildCommand: npm install
+    startCommand: npm start  # Simple and direct
     envVars:
       - key: NODE_ENV
         value: production
-      # Add the following secrets in the Render dashboard or replace with real values:
+      - key: PORT
+        value: 10000
+      # Add these in Render dashboard after creation:
       # - key: MONGO_URI
-      #   value: <MONGO_CONNECTION_STRING>
+      #   sync: false
       # - key: CLERK_SECRET_KEY
-      #   value: <CLERK_SECRET_KEY>
-      # - key: SMTP_USER
-      #   value: <SMTP_USER>
-      # - key: SMTP_PASS
-      #   value: <SMTP_PASS>
+      #   sync: false
+    healthCheckPath: /health
     plan: free
     autoDeploy: true
