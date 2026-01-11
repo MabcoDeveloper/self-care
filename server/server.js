@@ -13,6 +13,8 @@ import cartRouter from "./routes/cartRoute.js";
 import productRouter from "./routes/productRoute.js";
 import orderRouter from "./routes/orderRoute.js";
 import { stripeWebhooks } from "./controllers/stripeWebhook.js";
+import path from 'path'
+import fs from 'fs'
 
 await connectDB(); // Establish connection to the database
 await connectCloudinary(); // setup cloudinary for image storage
@@ -81,6 +83,18 @@ app.use("/api/orders", orderRouter); // routes for handling order
 app.get("/", (req, res) => {
   res.send("API Successfully connected");
 });
+
+// Serve client static build if present (production builds)
+const clientDist = path.join(process.cwd(), 'client', 'dist')
+if (fs.existsSync(clientDist)) {
+  app.use(express.static(clientDist))
+
+  // For any non-API route, serve the SPA entrypoint so client-side routing works
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/api/')) return next()
+    res.sendFile(path.join(clientDist, 'index.html'))
+  })
+}
 
 const port = process.env.PORT || 3000; //Define server port
 
