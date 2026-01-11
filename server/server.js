@@ -19,12 +19,23 @@ await connectCloudinary(); // setup cloudinary for image storage
 
 const app = express(); //initialze express application
 // Enable Cross-origin Resource sharing and allow credentials (cookies)
-app.use(
-  cors({
-    origin: process.env.CLIENT_URL || "http://localhost:5173",
-    credentials: true,
-  })
-);
+// Support a comma-separated list in CLIENT_URLS (or single CLIENT_URL) so
+// the deployed frontend(s) can be allowed. Example: CLIENT_URLS="https://fe1,https://fe2"
+const clientUrlsEnv = process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:5173";
+const allowedOrigins = clientUrlsEnv.split(",").map(s => s.trim()).filter(Boolean);
+
+app.use(cors({
+  origin: function(origin, callback) {
+    // allow non-browser requests like curl, server-to-server (origin==undefined)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      return callback(null, true);
+    }
+    console.warn('Blocked CORS origin:', origin);
+    return callback(null, false);
+  },
+  credentials: true,
+}));
 
 // api to listen stripe webhooks
 app.post(
