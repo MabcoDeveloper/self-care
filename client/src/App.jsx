@@ -2,6 +2,8 @@ import { Toaster } from "react-hot-toast";
 import { Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Chatbot from "./components/Chatbot";
+import "./components/chatbot.css";
 import Sidebar from "./components/owner/Sidebar";
 import AddressForm from "./pages/AddressForm";
 import Blog from "./pages/Blog";
@@ -39,6 +41,7 @@ const App = () => {
         </Route>
       </Routes>
       {!isOwnerPath && <Footer />}
+      {!isOwnerPath && <Chatbot />}
     </main>
   );
 };

@@ -35,7 +35,7 @@ export const authUser = async (req, res, next) => {
       return res.status(401).json({ success: false, message: "Invalid token" });
     }
     
-    console.log('Authenticating user:', userId);
+    //console.log('Authenticating user:', userId);
     
     // Find existing user
     let user = await User.findById(userId);

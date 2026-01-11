@@ -48,7 +48,7 @@ app.post(
 app.use(express.json()); // enables JSON request body parsing
 // Log incoming cookies and auth-related headers for debugging Clerk auth issues
 app.use((req, res, next) => {
-  console.log('Incoming request:', req.method, req.path, { cookie: req.headers.cookie, authorization: req.headers.authorization });
+  //console.log('Incoming request:', req.method, req.path, { cookie: req.headers.cookie, authorization: req.headers.authorization });
   next();
 });
 
