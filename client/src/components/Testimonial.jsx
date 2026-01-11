@@ -68,7 +68,7 @@ const Testimonial = () => {
       </div>
 
       <p className="text-base py-4 text-tertiary italic leading-relaxed">
-        "Purevera products are a game-changer! My skin has never felt so radiant
+        "SelfCare products are a game-changer! My skin has never felt so radiant
         and healthy. Highly recommend their hydrating serum."
       </p>
 

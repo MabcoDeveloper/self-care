@@ -44,9 +44,9 @@ function Sidebar ()
             {/*Logo*/}
             <div className="flex-1 flex items-center justify-start">
               <Link to={"/"} className="flex items-center gap-x-2">
-                <img src="/treh.png" alt="Purevera Logo" className="h-10" />
+                <img src="/treh.png" alt="SelfCare Logo" className="h-10" />
                 <span className="hidden sm:block bold-24 text-secondary">
-                  Purevera
+                  SelfCare
                 </span>
               </Link>
             </div>
