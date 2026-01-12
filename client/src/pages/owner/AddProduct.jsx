@@ -1,8 +1,7 @@
-import React from "react";
-import { assets } from "../../assets/data";
-import toast from "react-hot-toast";
-import { UseAppContext } from "../../context/AppContext";
 import { useState } from "react";
+import toast from "react-hot-toast";
+import { assets } from "../../assets/data";
+import { UseAppContext } from "../../context/AppContext";
 
 function AddProduct() {
   const { axios, getToken } = UseAppContext();
@@ -262,11 +261,12 @@ function AddProduct() {
               className="w-32 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14"
             >
               <input
+                id={`productImage${key}`}
                 onChange={(e) =>
                   setImages({ ...images, [key]: e.target.files[0] })
                 }
                 type="file"
-                accept="image/* id={`productImage${key}`}"
+                accept="image/*"
                 hidden
               />
               <div className="h-16 bg-white flexCenter">
