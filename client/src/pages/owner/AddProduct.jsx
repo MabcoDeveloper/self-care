@@ -119,7 +119,7 @@ function AddProduct() {
       });
 
       const { data } = await axios.post("/api/products", formData, {
-        header: { Authorization: `Bearer ${await getToken()}` },
+        headers: { Authorization: `Bearer ${await getToken()}` },
       });
       if (data.success) {
         toast.success(data.message);
