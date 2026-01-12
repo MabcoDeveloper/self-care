@@ -4,8 +4,19 @@ import Product from "../models/Products.js"
 // controller function for adding product [POST '/']
 export const createProduct = async (req,res) => {
     try {
-        const productData = JSON.parse(req.body.productData)
+        const productData = JSON.parse(req.body.productData || '{}')
         const files = req.files || []
+
+        // Debug info to help diagnose missing sizes/images
+        console.log('createProduct payload:', {
+            productDataPreview: {
+                title: productData.title,
+                sizes: productData.sizes || productData.size || null,
+                price: productData.price || null
+            },
+            filesCount: files.length,
+            fileNames: files.map(f => f.originalname)
+        })
 
         //upload images to cloudinary (if any)
         const imagesUrl = await Promise.all(
@@ -15,16 +26,24 @@ export const createProduct = async (req,res) => {
             })
         )
 
-        // Normalize incoming fields to match schema:
-        // product schema uses `size` and `image` (singular), while client sends `sizes` and we collected imagesUrl
+        // Normalize incoming fields to match schema and prefer actual uploaded files when available
         const productToCreate = {
             ...productData,
-            size: productData.sizes || [],
-            image: imagesUrl || []
+            size: productData.sizes || productData.size || [],
+            image: (imagesUrl && imagesUrl.length > 0) ? imagesUrl : (productData.image || productData.images || [])
         }
 
-        // Remove `sizes` if present to avoid duplicate/confusing fields
+        // Remove `sizes`/`images` if present to avoid duplicate/confusing fields
         if (productToCreate.sizes) delete productToCreate.sizes
+        if (productToCreate.images) delete productToCreate.images
+
+        // Validation: require at least one size and one image
+        if (!productToCreate.size || productToCreate.size.length === 0) {
+            return res.status(400).json({success:false, message: 'Please provide at least one size'})
+        }
+        if (!productToCreate.image || productToCreate.image.length === 0) {
+            return res.status(400).json({success:false, message: 'Please upload at least one image'})
+        }
 
         await Product.create(productToCreate)
 
