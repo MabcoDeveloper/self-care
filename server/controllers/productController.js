@@ -1,21 +1,32 @@
-import {v2 as cloundinary} from "cloudinary"
+import { v2 as cloundinary } from "cloudinary"
 import Product from "../models/Products.js"
 
 // controller function for adding product [POST '/']
 export const createProduct = async (req,res) => {
     try {
         const productData = JSON.parse(req.body.productData)
-        const images = req.files
+        const files = req.files || []
 
-        //upload images to cloudinary
+        //upload images to cloudinary (if any)
         const imagesUrl = await Promise.all(
-            images.map(async (item)=> {
+            files.map(async (item)=> {
                 const result = await cloundinary.uploader.upload(item.path, {resource_type: "image"})
                 return result.secure_url
             })
         )
 
-        await Product.create({...productData, images: imagesUrl})
+        // Normalize incoming fields to match schema:
+        // product schema uses `size` and `image` (singular), while client sends `sizes` and we collected imagesUrl
+        const productToCreate = {
+            ...productData,
+            size: productData.sizes || [],
+            image: imagesUrl || []
+        }
+
+        // Remove `sizes` if present to avoid duplicate/confusing fields
+        if (productToCreate.sizes) delete productToCreate.sizes
+
+        await Product.create(productToCreate)
 
         res.json({success:true, message: "Product Added"})
     } catch (error) {

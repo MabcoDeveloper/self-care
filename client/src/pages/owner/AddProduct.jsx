@@ -57,7 +57,8 @@ function AddProduct() {
       ...sizePrices,
       { size: newSize, price: parseFloat(newPrice) },
     ]);
-    setNewPrice("");
+    // clear both inputs after adding
+    setNewSize("");
     setNewPrice("");
   };
   const removeSizePrice = (size) => {
