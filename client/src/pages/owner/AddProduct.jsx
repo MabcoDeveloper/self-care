@@ -14,9 +14,13 @@ function AddProduct() {
 
   const [inputs, setInputs] = useState({
     title: "",
+    title_ar: "",
     description: "",
+    description_ar: "",
     category: "",
+    category_ar: "",
     type: "",
+    type_ar: "",
     popular: false,
   });
   const [sizePrices, setSizePrices] = useState([]);
@@ -35,6 +39,23 @@ function AddProduct() {
     "Serum",
     "Shampoo",
   ];
+
+  const categoriesAr = {
+    "Hair Care": "العناية بالشعر",
+    "Body Care": "العناية بالجسم",
+    "Face Care": "العناية بالوجه",
+  };
+  const typesAr = {
+    "Body-spray": "بخاخ للجسم",
+    Cleanser: "منظف",
+    "Hand-Wash": "غسول اليدين",
+    "Lip-Product": "منتج الشفاه",
+    Lotion: "لوشن",
+    Oil: "زيت",
+    Perfume: "عطر",
+    Serum: "سيروم",
+    Shampoo: "شامبو",
+  };
 
   const addSizePrices = () => {
     if (!newSize && !newPrice) {
@@ -102,9 +123,13 @@ function AddProduct() {
 
       const productData = {
         title: inputs.title,
+        title_ar: inputs.title_ar,
         description: inputs.description,
+        description_ar: inputs.description_ar,
         category: inputs.category,
+        category_ar: inputs.category_ar,
         type: inputs.type,
+        type_ar: inputs.type_ar,
         popular: inputs.popular,
         price: prices,
         sizes: sizes,
@@ -127,9 +152,13 @@ function AddProduct() {
         //reset form after success
         setInputs({
           title: "",
+          title_ar: "",
           description: "",
+          description_ar: "",
           category: "",
+          category_ar: "",
           type: "",
+          type_ar: "",
           popular: false,
         });
         setSizePrices([]);
@@ -161,6 +190,13 @@ function AddProduct() {
             placeholder="Type here"
             className="px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 mt-1 w-full add-input"
           />
+          <input
+            onChange={(e) => setInputs({ ...inputs, title_ar: e.target.value })}
+            value={inputs.title_ar}
+            type="text"
+            placeholder="Product Name (Arabic)"
+            className="mt-2 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 w-full add-input"
+          />
         </div>
         <div className="pDescription w-full mb-4">
           <h5 className="h5">Product Description</h5>
@@ -173,13 +209,22 @@ function AddProduct() {
             placeholder="Type here"
             className="px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 mt-1 w-full add-input"
           />
+          <input
+            onChange={(e) =>
+              setInputs({ ...inputs, description_ar: e.target.value })
+            }
+            value={inputs.description_ar}
+            type="text"
+            placeholder="Description (Arabic)"
+            className="mt-2 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 w-full add-input"
+          />
         </div>
         <div className="flex gap-4 flex-wrap ">
           <div className="selectCategory">
             <h5 className="h5">Category</h5>
             <select
               onChange={(e) =>
-                setInputs({ ...inputs, category: e.target.value })
+                setInputs({ ...inputs, category: e.target.value, category_ar: categoriesAr[e.target.value] || "" })
               }
               value={inputs.category}
               className="w-38 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 mt-1.5 cursor-pointer"
@@ -191,11 +236,18 @@ function AddProduct() {
                 </option>
               ))}
             </select>
+            <input
+              onChange={(e) => setInputs({ ...inputs, category_ar: e.target.value })}
+              value={inputs.category_ar}
+              type="text"
+              placeholder="Category (Arabic)"
+              className="mt-2 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 w-full add-input"
+            />
           </div>
           <div className="">
             <h5 className="h5">Types</h5>
             <select
-              onChange={(e) => setInputs({ ...inputs, type: e.target.value })}
+              onChange={(e) => setInputs({ ...inputs, type: e.target.value, type_ar: typesAr[e.target.value] || "" })}
               value={inputs.type}
               className="w-36 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 mt-1.5 cursor-pointer"
             >
@@ -206,6 +258,13 @@ function AddProduct() {
                 </option>
               ))}
             </select>
+            <input
+              onChange={(e) => setInputs({ ...inputs, type_ar: e.target.value })}
+              value={inputs.type_ar}
+              type="text"
+              placeholder="Type (Arabic)"
+              className="mt-2 px-3 py-1.5 ring-1 ring-slate 900/10 rounded-lg bg-white text-gray-600 medium-14 w-full add-input"
+            />
           </div>
         </div>
         {/*Size and Price Pairs*/}

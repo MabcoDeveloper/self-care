@@ -112,7 +112,22 @@ export const AppContextProvider = ({ children }) => {
     try {
       const { data } = await axios.get("/api/products");
       if (data && data.success) {
-        setProducts(data.products || []);
+        // Normalize product fields for consistent client usage
+        const normalized = (data.products || []).map((p) => {
+          const sizes = p.size || p.sizes || [];
+          const images = Array.isArray(p.image) ? p.image : [];
+          const normalizedImages = images.map((img) => {
+            if (!img) return img;
+            if (typeof img !== "string") return String(img);
+            if (img.startsWith("http://") || img.startsWith("https://")) return img;
+            // keep leading slash for client public assets, ensure path starts with '/'
+            return img.startsWith("/") ? img : `/${img}`;
+          });
+
+          return { ...p, size: sizes, image: normalizedImages };
+        });
+
+        setProducts(normalized);
       } else {
         toast.error(data.message || "Failed to fetch products");
         setProducts(DummyProducts);
