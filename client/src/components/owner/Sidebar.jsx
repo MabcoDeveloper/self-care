@@ -1,8 +1,8 @@
-import React, { useEffect, useState} from 'react'
-import { UseAppContext } from '../../context/AppContext';
-import { Link, NavLink, Outlet } from 'react-router-dom';
 import { UserButton } from '@clerk/clerk-react';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, Outlet } from 'react-router-dom';
 import { assets } from '../../assets/data';
+import { UseAppContext } from '../../context/AppContext';
 
 function Sidebar ()
 {
@@ -100,7 +100,7 @@ function Sidebar ()
               </div>
           </div>
         </div>
-      <div className='m-3 flex-1 bg-white pt-1 pr-6 rounded-xl shadow-sm'>
+      <div className='m-3 flex-1 bg-white pt-1 pr-6 rounded-xl shadow-sm overflow-y-auto md:max-h-[97vh]'>
         <Outlet /> 
       </div>
       </div>
